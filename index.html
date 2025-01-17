@@ -13,11 +13,11 @@
       padding: 0;
     }
     .header {
-      background-color: #4CAF50;
+      background-color: #3F51B5;
       color: white;
       text-align: center;
-      padding: 10px;
-      font-size: 2.0vw;
+      padding: 15px;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
       font-weight: bold;
     }
     .controls {
@@ -30,18 +30,23 @@
     }
     .controls input {
       padding: 10px;
-      font-size: 1vw;
-      width: 200px;
+      font-size: clamp(1rem, 1.5rem);
+      width: 15vw;
       text-align: center;
+      border-radius: 10px;
+      border: 2px solid #3F51B5;
+      background-color: white;
     }
     .controls button {
       padding: 10px 20px;
-      font-size: 1vw;
+      font-size: clamp(1rem, 1.5rem);
       border: none;
       cursor: pointer;
-      background-color: #4CAF50;
+      background-color: #3F51B5;
       color: white;
-      border-radius: 5px;
+      border-radius: 25px;
+      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
     }
     .controls button:hover {
       background-color: #45a049;
@@ -70,14 +75,15 @@
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
     .card {
-      border: 1px solid #ccc;
+      border: 2px solid #3F51B5;
       background: white;
       text-align: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      padding: 15px 5px;
+      box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.15);
+      padding: 15px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      border-radius: 10px;
     }
     .card .player-name {
       background-color: #f4f4f4;
@@ -99,10 +105,11 @@
       grid-template-columns: repeat(5, 1fr);
     }
     .bingo-grid div {
-      border: 1px solid #ccc;
+      border: 1px solid #3F51B5;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: clamp(1rem,1.5rem);
       font-weight: bold;
       font-family: 'Poppins', sans-serif;
     }
@@ -110,11 +117,11 @@
       background-color: yellow;
     }
     .bingo {
-      background-color: blue;
+      background-color: #1E88E5;
       color: white;
     }
     .reach {
-      background-color: red;
+      background-color: #E53935;
       color: white;
       animation: blink 1s infinite;
     }
