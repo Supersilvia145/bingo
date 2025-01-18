@@ -30,7 +30,7 @@
     }
     .controls input {
       padding: 10px;
-      font-size: clamp(1rem, 1.5rem);
+      font-size: clamp(1rem,1.2vw 1.5rem);
       width: 15vw;
       text-align: center;
       border-radius: 10px;
@@ -39,7 +39,7 @@
     }
     .controls button {
       padding: 10px 20px;
-      font-size: clamp(1rem, 1.5rem);
+      font-size: clamp(1rem,1.2vw 1.5rem);
       border: none;
       cursor: pointer;
       background-color: #3F51B5;
@@ -148,6 +148,13 @@
       padding: 0px 10px 10px 10px;  /* 上側のpaddingを1pxに縮小 */
       flex: 1;
       height: 100%;
+    }
+
+    /* 追加部分 */
+    .bingo-list ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
     }
     .history-list {
       background-color: white;
