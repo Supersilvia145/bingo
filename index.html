@@ -97,7 +97,10 @@
       border: 1px solid #ddd;
       border-radius: 5px;
       padding: 2px;
+      font-size: 1.4vw;
     }
+
+
     .bingo-grid {
       display: grid;
       gap: 3px;
@@ -145,36 +148,36 @@
     .bingo-list {
       background-color: white;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      padding: 0px 10px 10px 10px;  /* 上側のpaddingを1pxに縮小 */
+      padding: 0px 10px 10px 10px;
       flex: 1;
       height: 100%;
-      max-height: calc(100vh - 100px); /* リストの最大高さを設定（適宜変更可能） */
-      overflow-y: auto; /* スクロール可能にする */
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
     }
 
-    /* 追加部分 */
     .bingo-list ul {
       list-style: none;
       padding-left: 0;
       margin: 0;
     }
 
-.history-list h3,
-.bingo-list h3 {
-  font-size: 2.0vw;  /* ここを変更 */
-  font-weight: bold;
-  margin-bottom: 10px;
-}
+    .history-list h3,
+    .bingo-list h3 {
+      font-size: 1.6vw;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
 
     .history-list {
       background-color: white;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      padding: 0px 10px 10px 10px;  /* 上側のpaddingを1pxに縮小 */
+      padding: 0px 10px 10px 10px;
       flex: 1;
       height: 100%;
-      max-height: calc(100vh - 100px); /* リストの最大高さを設定（適宜変更可能） */
-      overflow-y: auto; /* スクロール可能にする */
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
     }
+
     .history-list ul {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
@@ -184,6 +187,7 @@
       margin: 0;
       list-style: none;
     }
+
     .history-list li {
       text-align: center;
       padding: 5px;
@@ -300,6 +304,25 @@
       players[index].name = name.slice(0, 7);
     }
 
+    function saveWinnersToServer() {
+      const top3Players = winners.slice(0, 3).map(player => player.name);
+      
+      fetch('/save_winners', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ winners: top3Players })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Winners saved successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error saving winners:', error);
+      });
+    }
+
     function drawNumber() {
       if (drawnNumbers.length >= 75) {
         alert('All numbers have been drawn!');
@@ -336,6 +359,9 @@
         alert('Game Over! All players have achieved Bingo!');
         clearInterval(autoDrawInterval);
         autoDrawInterval = null;
+        
+        // Save top 3 winners to the server when the game ends
+        saveWinnersToServer();
       }
     }
 
