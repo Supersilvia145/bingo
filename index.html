@@ -17,7 +17,7 @@
       color: white;
       text-align: center;
       padding: 15px;
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-size: clamp(1.5rem, 2vw, 2.5rem);
       font-weight: bold;
     }
     .controls {
@@ -148,6 +148,8 @@
       padding: 0px 10px 10px 10px;  /* 上側のpaddingを1pxに縮小 */
       flex: 1;
       height: 100%;
+      max-height: calc(100vh - 100px); /* リストの最大高さを設定（適宜変更可能） */
+      overflow-y: auto; /* スクロール可能にする */
     }
 
     /* 追加部分 */
@@ -156,12 +158,22 @@
       padding-left: 0;
       margin: 0;
     }
+
+.history-list h3,
+.bingo-list h3 {
+  font-size: 1.3vw;  /* ここを変更 */
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
     .history-list {
       background-color: white;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       padding: 0px 10px 10px 10px;  /* 上側のpaddingを1pxに縮小 */
       flex: 1;
       height: 100%;
+      max-height: calc(100vh - 100px); /* リストの最大高さを設定（適宜変更可能） */
+      overflow-y: auto; /* スクロール可能にする */
     }
     .history-list ul {
       display: grid;
