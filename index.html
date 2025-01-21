@@ -11,6 +11,10 @@
       background-color: #f9f9f9;
       margin: 0;
       padding: 0;
+      background-image: url('WEBbackground.webp'); /* 背景画像を設定 */
+      background-size: cover; /* 画面全体に画像を覆う */
+      background-position: center; /* 画像を中央に配置 */
+      background-attachment: fixed; /* スクロール時に背景が動かないように固定 */
     }
     .header {
       background-color: #3F51B5;
@@ -74,17 +78,16 @@
       width: 100%;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
-    .card {
-      border: 2px solid #3F51B5;
-      background: white;
-      text-align: center;
-      box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.15);
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border-radius: 10px;
-    }
+.card {
+  background: rgba(255, 255, 255, 0.9); /* 半透明の背景 */
+  text-align: center;
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.3), -5px -5px 20px rgba(0, 0, 0, 0.3); /* 立体感を強化 */
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 10px;
+}
     .card .player-name {
       background-color: #f4f4f4;
       font-size: 1.0vw;
@@ -92,6 +95,8 @@
       margin-bottom: 5px;
     }
     .player-name input {
+      background-color: gray;
+color: white; /* 文字を白に設定 */
       text-align: center;
       width: 90%;
       border: 1px solid #ddd;
@@ -145,15 +150,20 @@
       padding: 10px;
       max-height: calc(100vh - 100px);
     }
-    .bingo-list {
-      background-color: white;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      padding: 0px 10px 10px 10px;
-      flex: 1;
-      height: 100%;
-      max-height: calc(100vh - 100px);
-      overflow-y: auto;
-    }
+.bingo-list {
+  background-color: rgba(255, 255, 255, 0.5); /* 半透明の背景 */
+  color: white; /* 文字を白に設定 */
+  font-weight: bold; /* 文字を太くする */
+  text-shadow: 3px 3px 8px black, -3px -3px 8px black, 3px -3px 8px black, -3px 3px 8px black; /* 強く濃い黒縁取り */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 0px 10px 10px 10px;
+  flex: 1;
+  height: 100%;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+font-weight: bold; /* 文字を太字にする */
+
+}
 
     .bingo-list ul {
       list-style: none;
@@ -169,13 +179,16 @@
     }
 
     .history-list {
-      background-color: white;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      padding: 0px 10px 10px 10px;
-      flex: 1;
-      height: 100%;
-      max-height: calc(100vh - 100px);
-      overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.5); /* 半透明の背景 */
+  color: white; /* 文字を白に設定 */
+  text-shadow: 2px 2px 5px black, -2px -2px 5px black, 2px -2px 5px black, -2px 2px 5px black; /* 強い黒縁取り */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 0px 10px 10px 10px;
+  flex: 1;
+  height: 100%;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+font-weight: bold; /* 文字を太字にする */
     }
 
     .history-list ul {
@@ -188,13 +201,14 @@
       list-style: none;
     }
 
-    .history-list li {
-      text-align: center;
-      padding: 5px;
-      background-color: #f0f0f0;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
+.history-list li {
+  text-align: center;
+  padding: 5px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3), -4px -4px 12px rgba(0, 0, 0, 0.3); /* より強い立体感 */
+}
   </style>
 </head>
 <body>
