@@ -662,6 +662,7 @@ function drawNumber() {
     }
 }
 
+
     function checkGameEnd() {
       if (players.every(player => player.bingoCells.length > 0)) {
         alert('Game Over! All players have achieved Bingo!');
@@ -847,9 +848,9 @@ function updateWinnerList() {
     const list = document.getElementById('winner-list');
     list.innerHTML = '';
 
-    let currentRank = 1; // 🎯 最初のビンゴは1番
-    let lastBingoTurn = -1; // 🎯 前回のターン
-    let lastRank = 1; // 🎯 直前の順位
+    let currentRank = 1; // 🎯 最初の順位は 1
+    let lastBingoTurn = -1; // 🎯 前のビンゴターン
+    let sameTurnCount = 0; // 🎯 同じターン内でのビンゴ人数カウント
 
     // 🎯 ターン順で並べ直す（万が一順番が崩れた場合に対応）
     winners.sort((a, b) => a.bingoTurn - b.bingoTurn);
@@ -857,7 +858,12 @@ function updateWinnerList() {
     winners.forEach((player, index) => {
         if (player.bingoTurn !== lastBingoTurn) {
             // 🎯 新しいターンのビンゴなら順位を更新
-            if (index !== 0) currentRank = lastRank + 1;
+            if (index !== 0) {
+                currentRank += sameTurnCount; // 🎯 次の順位を「前の順位 + 同時ビンゴ人数」に変更
+            }
+            sameTurnCount = 1; // 🎯 新しいターンの最初のプレイヤー
+        } else {
+            sameTurnCount++; // 🎯 同じターンのプレイヤーをカウント
         }
         
         const listItem = document.createElement('li');
@@ -865,9 +871,9 @@ function updateWinnerList() {
         list.appendChild(listItem);
 
         lastBingoTurn = player.bingoTurn;
-        lastRank = currentRank;
     });
 }
+
 
 function updateHistoryList() {
     const list = document.getElementById('number-history');
