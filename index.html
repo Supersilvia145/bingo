@@ -264,11 +264,12 @@ font-weight: bold; /* 文字を太字にする */
 
 
 /* 画像のサイズを大きく */
-.popup-content img {
-  width: 250px; /* 🎯 画像サイズを拡大 */
-  height: 250px;
-  border-radius: 50%;
-  margin: 20px 0;
+.popup-content {
+  width: clamp(300px, 50vw, 600px);
+  max-width: 80vw;
+  height: auto;
+  max-height: 90vh;
+  padding: clamp(20px, 4vw, 40px);
 }
 
 /* ビンゴに必要な番号を大きく表示 */
@@ -293,11 +294,14 @@ font-weight: bold; /* 文字を太字にする */
   background-color: #303F9F;
 }
 
-.popup-content h3 {
-  font-size: 2.5rem;  /* 🎯 文字サイズを大きく */
-  font-weight: bold;
-  color: #E53935;  /* 🎯 文字色を赤く（必要に応じて変更） */
-  margin-bottom: 20px; /* 🎯 余白を追加 */
+
+.popup-content h2, .popup-content h3, .popup-content p {
+  font-size: clamp(1.5rem, 2vw, 2.5rem);
+}
+
+.popup-content img {
+  width: clamp(100px, 30vw, 250px);
+  height: clamp(100px, 30vw, 250px);
 }
 
 /* ビンゴポップアップ全体のスタイル */
