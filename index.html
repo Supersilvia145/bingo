@@ -264,12 +264,11 @@ font-weight: bold; /* 文字を太字にする */
 
 
 /* 画像のサイズを大きく */
-.popup-content {
-  width: clamp(300px, 50vw, 600px);
-  max-width: 80vw;
-  height: auto;
-  max-height: 90vh;
-  padding: clamp(20px, 4vw, 40px);
+.popup-content img {
+  width: 250px; /* 🎯 画像サイズを拡大 */
+  height: 250px;
+  border-radius: 50%;
+  margin: 20px 0;
 }
 
 /* ビンゴに必要な番号を大きく表示 */
@@ -294,14 +293,11 @@ font-weight: bold; /* 文字を太字にする */
   background-color: #303F9F;
 }
 
-
-.popup-content h2, .popup-content h3, .popup-content p {
-  font-size: clamp(1.5rem, 2vw, 2.5rem);
-}
-
-.popup-content img {
-  width: clamp(100px, 30vw, 250px);
-  height: clamp(100px, 30vw, 250px);
+.popup-content h3 {
+  font-size: 2.5rem;  /* 🎯 文字サイズを大きく */
+  font-weight: bold;
+  color: #E53935;  /* 🎯 文字色を赤く（必要に応じて変更） */
+  margin-bottom: 20px; /* 🎯 余白を追加 */
 }
 
 /* ビンゴポップアップ全体のスタイル */
@@ -319,32 +315,22 @@ font-weight: bold; /* 文字を太字にする */
   z-index: 20000;
 }
 
+/* ビンゴポップアップの内容 */
 #bingo-popup .popup-content {
-  width: clamp(300px, 50vw, 600px);
-  max-width: 80vw;
+  background: white;
+  width: 50vw;
+  max-width: 600px;
   height: auto;
-  max-height: 90vh;
-  padding: clamp(20px, 4vw, 40px);
-}
-
-/* 🎯 ビンゴポップアップのテキストを自動調整 */
-#bingo-popup h2, #bingo-popup h3, #bingo-popup p {
-  font-size: clamp(1.5rem, 2vw, 2.5rem);
-}
-
-/* 🎯 ビンゴポップアップの画像をデバイスサイズに合わせる */
-#bingo-player-image {
-  width: clamp(100px, 30vw, 250px);
-  height: clamp(100px, 30vw, 250px);
-  border-radius: 50%;
-  margin: 20px 0;
-}
-
-/* 🎯 ビンゴポップアップの閉じるボタンを自動調整 */
-#bingo-popup button {
-  font-size: clamp(1rem, 1.5vw, 2rem);
-  padding: clamp(10px, 2vw, 20px);
-  max-width: 90%;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  z-index: 20001;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 
@@ -360,6 +346,13 @@ font-weight: bold; /* 文字を太字にする */
   text-shadow: 2px 2px 5px black, -2px -2px 5px black, 2px -2px 5px black, -2px 2px 5px black;
 }
 
+/* ビンゴポップアップの画像 */
+#bingo-player-image {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  margin: 20px 0;
+}
 
 /* ビンゴポップアップのメッセージ */
 #bingo-message {
