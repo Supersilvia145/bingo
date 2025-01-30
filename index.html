@@ -249,9 +249,9 @@ font-weight: bold; /* 文字を太字にする */
 /* ポップアップの内容 */
 .popup-content {
   background: white;
-  width: 200vw;  /* 🎯 幅を適切に設定 */
-  max-width: 600px; /* 🎯 最大幅を設定 */
-  height: auto; /* 🎯 高さをコンテンツに応じて調整 */
+  width: 30vw;  /* 🎯 幅を 30vw に変更し、はみ出しを防ぐ */
+  max-width: 400px; /* 🎯 最大幅を 400px に設定 */
+  height: auto; /* 🎯 高さはコンテンツに応じて変動 */
   padding: 10px; /* 🎯 余白を確保 */
   border-radius: 15px;
   text-align: center;
@@ -261,20 +261,22 @@ font-weight: bold; /* 文字を太字にする */
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden; /* 🎯 はみ出しを防ぐ */
+  position: fixed;
+  right: 20px; /* 🎯 画面の右側（番号リスト・ビンゴリストのエリア内）に収める */
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 #bingo-popup .popup-content h3 {
-  font-size: 2.5rem;
+  font-size: 1rem;
   font-weight: bold;
   margin-bottom: 10px;
   color: blue; /* 🎯 ここを追加！ */
 }
 
 
-/* プレイヤー名を大きく */
 #popup-player-name {
-  font-size: 4rem; /* 🎯 文字サイズを大きく */
+  font-size: 2rem; /* 🎯 文字サイズを大きく */
   font-weight: bold;
   background-color: red; /* 🎯 背景色を赤に */
   color: white;
@@ -287,15 +289,15 @@ font-weight: bold; /* 文字を太字にする */
 
 /* 画像のサイズを大きく */
 .popup-content img {
-  width: 200px; /* 🎯 画像サイズを拡大 */
-  height: 200px;
+  width: 120px; /* 🎯 画像サイズを小さく */
+  height: 120px;
   border-radius: 50%;
-  margin: 20px 0;
+  margin: 10px 0;
 }
 
 /* ビンゴに必要な番号を大きく表示 */
 #popup-reach-numbers {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: bold;
   margin: 10px 0;
 }
@@ -308,7 +310,7 @@ font-weight: bold; /* 文字を太字にする */
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 .popup-content button:hover {
@@ -316,7 +318,7 @@ font-weight: bold; /* 文字を太字にする */
 }
 
 .popup-content h3 {
-  font-size: 2.5rem;  /* 🎯 文字サイズを大きく */
+  font-size: 1.5rem;  /* 🎯 文字サイズを大きく */
   font-weight: bold;
   color: #E53935;  /* 🎯 文字色を赤く（必要に応じて変更） */
   margin-bottom: 20px; /* 🎯 余白を追加 */
@@ -331,7 +333,6 @@ font-weight: bold; /* 文字を太字にする */
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.3); /* 🎯 透明度を調整 (0.7 → 0.5) */
-  backdrop-filter: blur(10px); /* 🎯 背景をぼかす（黒くなりすぎるのを防ぐ） */
   justify-content: center;
   align-items: center;
   z-index: 20000;
@@ -340,8 +341,8 @@ font-weight: bold; /* 文字を太字にする */
 /* ビンゴポップアップの内容 */
 #bingo-popup .popup-content {
   background: white;
-  width: 200vw;
-  max-width: 750px;
+  width: 35vw; /* 🎯 幅を適切に縮小 */
+  max-width: 320px; /* 🎯 最大幅を 450px に */
   height: auto;
   padding: 10px;
   border-radius: 15px;
@@ -352,13 +353,16 @@ font-weight: bold; /* 文字を太字にする */
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 
 /* ビンゴポップアップのプレイヤー名 */
 #bingo-player-name {
-  font-size: 4rem;
+  font-size: 2rem;
   font-weight: bold;
   background-color: blue; /* 🎯 ビンゴの背景色を青にする */
   color: white;
@@ -370,18 +374,17 @@ font-weight: bold; /* 文字を太字にする */
 
 /* ビンゴポップアップの画像 */
 #bingo-player-image {
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   margin: 20px 0;
 }
 
-/* ビンゴポップアップのメッセージ */
 #bingo-message {
-  font-size: 2.5rem;
+  font-size: 1.5rem; /* 🎯 文字サイズを適度に縮小 */
   font-weight: bold;
   margin: 10px 0;
-  color: blue; /* 🎯 ここを追加！ */
+  color: blue;
 }
 
 /* ビンゴポップアップの閉じるボタン */
@@ -392,7 +395,7 @@ font-weight: bold; /* 文字を太字にする */
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1rem;
   max-width: 90%;
   margin-top: 20px;
   align-self: center;
@@ -626,14 +629,6 @@ function notifyReaches(reachPlayers) {
     // 🎯 ここで「ビンゴしていないプレイヤーのみ」リストを作成
     let nonBingoPlayers = newReachPlayers.filter(player => player.bingoCells.length === 0);
 
-    if (nonBingoPlayers.length > 0) {
-        setTimeout(() => {
-            let reachSound = document.getElementById('reach-sound');
-            reachSound.currentTime = 0;
-            reachSound.play();
-        }, 1000);
-    }
-
     // 🎯 `reachQueue` に「新しいリーチ者リスト」を追加
     reachQueue = nonBingoPlayers;
 
@@ -642,9 +637,8 @@ function notifyReaches(reachPlayers) {
     }
 }
 
-
 function showNextReach() {
-    if (reachQueue.length === 0) {
+    if (reachQueue.length === 0 || isBingoPopupVisible) {
         isShowingReach = false;
         return;
     }
@@ -652,15 +646,59 @@ function showNextReach() {
     isShowingReach = true;
     let player = reachQueue.shift();
 
-    console.log("ポップアップ表示:", player.name);
-    showReachPopup(player);
+    setTimeout(() => { // 🎯 1秒遅延してポップアップを表示
+        console.log("リーチポップアップ表示:", player.name);
+        
+        showReachPopup(player);
 
-    setTimeout(() => {
-        document.getElementById('reach-popup').style.display = 'none';
-        document.body.classList.remove("popup-open"); // 🎯 スクロールを解除
-        isShowingReach = false;
-        showNextReach(); // 🎯 次のリーチ者を表示
-    }, 5000); // 🎯 5秒後に次のプレイヤーのポップアップを表示
+        // 🎯 自動ビンゴが動作中なら一時停止（ただし、意図的に停止していた場合はそのまま）
+        if (autoDrawInterval) {
+            clearInterval(autoDrawInterval);
+            autoDrawInterval = null;
+            autoDrawPaused = true; // 一時停止
+        }
+
+        setTimeout(() => {
+            closePopup();
+            isShowingReach = false;
+
+            // 🎯 リーチのポップアップを閉じた後に自動ビンゴを再開
+            restartAutoDraw();
+
+            // 🎯 次のリーチ者を表示
+            showNextReach();
+        }, 5000); // 🎯 5秒後に閉じる
+    }, 1000); // 🎯 1秒遅延
+}
+
+function showNextBingoPopup() {
+    if (bingoQueue.length === 0) {
+        isBingoPopupVisible = false;
+
+        // 🎯 ビンゴポップアップが閉じたら、リーチのポップアップを再開
+        if (reachQueue.length > 0) {
+            showNextReach();
+        }
+        return;
+    }
+
+    isBingoPopupVisible = true;
+    let player = bingoQueue.shift();
+    
+    setTimeout(() => { // 🎯 1秒遅延してポップアップを表示
+        console.log("ビンゴポップアップ表示:", player.name);
+        showBingoPopup(player);
+
+        setTimeout(() => {
+            closeBingoPopup();
+            isBingoPopupVisible = false;
+
+            // 🎯 ビンゴが終わったらリーチのポップアップをチェック
+            if (reachQueue.length > 0) {
+                showNextReach();
+            }
+        }, 5000); // 🎯 5秒後に閉じる
+    }, 1000); // 🎯 1秒遅延
 }
 
 function showNextBingoPopup() {
@@ -681,7 +719,7 @@ function showNextBingoPopup() {
 }
 
 function drawNumber() {
-    // 🎯 すでにゲームが終了していたら何もしない
+    // 🎯 すでに全員ビンゴしていたら停止
     if (players.every(player => player.bingoCells.length > 0)) {
         console.log("⚠️ すでに全員ビンゴ済み、番号抽選を中止");
         return;
@@ -699,38 +737,40 @@ function drawNumber() {
 
     drawnNumbers.push(currentNumber);
 
+    let currentNumberElement = document.getElementById('current-number');
+    let rouletteSound = document.getElementById('roulette-sound');
 
-let currentNumberElement = document.getElementById('current-number');
-let rouletteSound = document.getElementById('roulette-sound');
+    // 🎯 ルーレット音を再生
+    rouletteSound.play();
+    currentNumberElement.classList.add('roulette-animation');
 
-// ルーレット音声を再生
-rouletteSound.play();
-currentNumberElement.classList.add('roulette-animation');
+    // 🎯 ルーレットアニメーションの後に番号を表示（1秒遅延）
+    setTimeout(() => {
+        currentNumberElement.textContent = currentNumber;
+        currentNumberElement.classList.remove('roulette-animation');
 
-setTimeout(() => {
-  currentNumberElement.textContent = currentNumber;
-  currentNumberElement.classList.remove('roulette-animation');
+        // 🎯 ルーレット音を停止
+        rouletteSound.pause();
+        rouletteSound.currentTime = 0;
 
-  // 音声を停止
-  rouletteSound.pause();
-  rouletteSound.currentTime = 0;
-}, 1000);
+        // 🎯 ここでようやくビンゴカードと履歴を更新
+        updateCards(currentNumber);
+        updateHistoryList();
 
-    updateCards(currentNumber);
-    updateHistoryList();
+        turnCount++;
 
-    turnCount++;
+        const reachPlayers = [];
+        players.forEach(player => {
+            if (checkReach(player, currentNumber)) {
+                reachPlayers.push(player);
+            }
+        });
 
-    const reachPlayers = [];
-    players.forEach(player => {
-        if (checkReach(player, currentNumber)) {
-            reachPlayers.push(player);
+        if (reachPlayers.length > 0) {
+            notifyReaches(reachPlayers);
         }
-    });
 
-    if (reachPlayers.length > 0) {
-        notifyReaches(reachPlayers);
-    }
+    }, 1000); // 🎯 1秒後に実行
 }
 
 function checkGameEnd() {
@@ -850,7 +890,7 @@ function checkReach(player, currentNumber) {
 }
 
 function showReachPopup(player) {
-    setTimeout(() => { // 🔴 1秒の遅延
+    setTimeout(() => { // 🎯 1秒後にポップアップを表示
         document.getElementById('popup-player-name').textContent = player.name;
 
         let imagePath = `images/${player.name.replace(/\s+/g, '')}.jpg`;
@@ -864,7 +904,24 @@ function showReachPopup(player) {
         let popup = document.getElementById('reach-popup');
         popup.style.display = "flex";
         popup.style.zIndex = "20000";
-    }, 1000); // 🔴 1秒の遅延
+
+        // 🎯 自動ビンゴを一時停止
+        if (autoDrawInterval) {
+            clearInterval(autoDrawInterval);
+            autoDrawInterval = null;
+            autoDrawPaused = true;
+        }
+
+        // 🎯 さらに 1 秒後にリーチ音を再生
+        setTimeout(() => {
+            let reachSound = document.getElementById('reach-sound');
+            if (reachSound.paused) { // 🎯 すでに再生中でないことを確認
+                reachSound.currentTime = 0; // 音をリセット
+                reachSound.play();
+            }
+        }, 100);
+
+    }, 1000); // 🎯 1秒遅延してポップアップ表示
 }
 
 function closePopup() {
@@ -903,17 +960,16 @@ function checkBingo(player) {
         player.bingoCells = bingoCells;
         player.reachCells = [];
 
-        if (!winners.some(w => w.name === player.name)) {
-            player.bingoTurn = turnCount;
-            winners.push(player);
-            document.getElementById('bingo-sound').play();
-            updateWinnerList();
+    if (!winners.some(w => w.name === player.name)) {
+        player.bingoTurn = turnCount;
+        winners.push(player);
+        updateWinnerList(); // 🎯 ここだけ残す
 
-            bingoQueue.push(player);
-            if (!isBingoPopupVisible) {
-                showNextBingoPopup();
-            }
+        bingoQueue.push(player);
+        if (!isBingoPopupVisible) {
+            showNextBingoPopup();
         }
+    }
 
         // 🎯 最後のビンゴが出た場合は `checkGameEnd()` を呼ぶ
         if (players.every(p => p.bingoCells.length > 0)) {
@@ -986,10 +1042,14 @@ function stopAutoDraw() {
 }
 
 function restartAutoDraw() {
-  if (isPaused) {
-    isPaused = false; // 🔹 停止フラグ解除
-    autoDrawInterval = setInterval(drawNumber, 5000);
-  }
+    if (autoDrawPaused) { // 🎯 停止中だった場合のみ再開
+        autoDrawPaused = false;
+        autoDrawInterval = setInterval(() => {
+            if (!isBingoPopupVisible && !isShowingReach) { // 🎯 他のポップアップが出ていない時のみ進行
+                drawNumber();
+            }
+        }, 5000);
+    }
 }
 
 function closePopup() {
@@ -997,8 +1057,9 @@ function closePopup() {
 }
 
 
+
 function showBingoPopup(player) {
-    setTimeout(() => { // 🔴 1秒の遅延
+    setTimeout(() => { // 🎯 1秒後に実行
         document.getElementById('bingo-player-name').textContent = player.name;
 
         let imagePath = `images/${player.name.replace(/\s+/g, '')}.jpg`;
@@ -1019,10 +1080,17 @@ function showBingoPopup(player) {
             autoDrawPaused = true;
         }
 
-        // 🎯 5秒後にポップアップを閉じる
-        setTimeout(closeBingoPopup, 5000);
-    }, 1000); // 🔴 1秒の遅延
+        // 🎯 0.1秒遅れて音を再生
+        setTimeout(() => {
+            let bingoSound = document.getElementById('bingo-sound');
+            bingoSound.currentTime = 0; // 音をリセット
+            bingoSound.play();
+        }, 100);
+
+        setTimeout(closeBingoPopup, 5000); // 5秒後に閉じる
+    }, 1000); // 🎯 0.5秒の遅延
 }
+
 
 /* ビンゴポップアップを閉じる関数 */
 function closeBingoPopup() {
@@ -1035,7 +1103,7 @@ function closeBingoPopup() {
 }
 
 function showGameOverPopup(lastBingoPlayer) {
-    setTimeout(() => { // 🔴 1秒の遅延
+    setTimeout(() => { // 🔴 2秒の遅延
         let popup = document.createElement('div');
         popup.classList.add('popup-container');
         popup.style.display = "flex";
@@ -1052,7 +1120,7 @@ function showGameOverPopup(lastBingoPlayer) {
         `;
 
         document.body.appendChild(popup);
-    }, 1000); // 🔴 1秒の遅延
+    }, 2000); // 🔴 2秒の遅延
 }
 
 function closeGameOverPopup() {
