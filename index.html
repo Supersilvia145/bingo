@@ -144,11 +144,25 @@ body.popup-open .reach {
       background-color: red;
       color: white;
     }
-    @keyframes blink {
-      0% { opacity: 1; }
-      50% { opacity: 0; }
-      100% { opacity: 1; }
-    }
+
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes spinRoulette {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.roulette-animation {
+  display: inline-block;
+  animation: spinRoulette 1s ease-in-out infinite;
+}
+
+
     .list-container {
       display: flex;
       flex-direction: row;
@@ -249,6 +263,14 @@ font-weight: bold; /* 文字を太字にする */
   align-items: center;
   overflow: hidden; /* 🎯 はみ出しを防ぐ */
 }
+
+#bingo-popup .popup-content h3 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: blue; /* 🎯 ここを追加！ */
+}
+
 
 /* プレイヤー名を大きく */
 #popup-player-name {
@@ -359,6 +381,7 @@ font-weight: bold; /* 文字を太字にする */
   font-size: 2.5rem;
   font-weight: bold;
   margin: 10px 0;
+  color: blue; /* 🎯 ここを追加！ */
 }
 
 /* ビンゴポップアップの閉じるボタン */
@@ -385,12 +408,17 @@ font-weight: bold; /* 文字を太字にする */
   <div class="header">
     現在の番号: <span id="current-number">None</span>
   </div>
-  <div class="controls">
+
+<div class="controls">
+    <input type="file" id="player-file" accept=".txt">
+    <button onclick="loadPlayersFromFile()">プレイヤー読み込み</button>
+    
     <input type="number" id="player-count" min="1" max="100" value="20" />
     <button onclick="initializeGame()">プレイヤー数セット</button>
     <button onclick="drawNumber()">ビンゴ開始！</button>
     <button onclick="toggleAutoDraw()">全自動ビンゴ開始／停止</button>
-  </div>
+</div>
+
 <div id="modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
      background: rgba(0,0,0,0.8); color: white; padding: 20px; border-radius: 10px; text-align: center; font-size: 1.5rem;">
     <span id="modal-message"></span>
@@ -437,14 +465,17 @@ font-weight: bold; /* 文字を太字にする */
   <div class="popup-content">
     <h2>🎯 Game Over 🎯</h2>
     <p id="game-over-message">全員がビンゴしました！</p>
-    <p id="final-winner-message" style="font-size: 2.5rem; font-weight: bold; color: red; margin-top: 15px;"></p>
+    <p id="final-winner-message" style="font-size: 2.5rem; font-weight: bold; color: blue; margin-top: 15px;"></p>
     <button onclick="closeGameOverPopup()">閉じる</button>
   </div>
 </div>
 
+
+
+
   <audio id="reach-sound" src="reach.mp3"></audio>
   <audio id="bingo-sound" src="bingo.mp3"></audio>
-  <audio id="roulette-sound" src="roulette.mp3" loop></audio>
+  <audio id="roulette-sound" src="start.mp3" loop></audio>
 
   <script>
 let popupTimeout = null; // ポップアップ表示中のタイマーを管理する変数
@@ -542,9 +573,9 @@ function renderCards() {
                 row.map((num, j) => {
                     let className = '';
 
-                    if (player.hits[i][j]) { 
-                        className = 'highlight'; // 🎯 当たった番号は黄色
-                    }
+　　　　　　　　　　if (player.hits[i][j] || player.card[i][j] === 'FREE') { 
+    　　　　　　　　　　className = 'highlight'; // 🎯 当たった番号 or "FREE" を黄色にする
+　　　　　　　　　　 }
                     if (player.bingoCells.some(cell => cell[0] === i && cell[1] === j)) {
                         className = 'bingo'; // 🎯 ビンゴ番号は青
                     } else if (player.reachCells.some(cell => cell[0] === i && cell[1] === j) && player.bingoCells.length === 0) {
@@ -583,22 +614,31 @@ function renderCards() {
       });
     }
 
-
 function notifyReaches(reachPlayers) {
-    let newReachPlayers = reachPlayers.filter(player => !player.wasInReach); // 🎯 まだリーチしていないプレイヤーのみ取得
-
-    console.log("リーチ判定:", newReachPlayers);
-
-    if (newReachPlayers.length === 0) return; // すでにリーチのプレイヤーしかいない場合は何もしない
+    let newReachPlayers = reachPlayers.filter(player => !player.wasInReach);
+    
+    if (newReachPlayers.length === 0) return;
 
     newReachPlayers.forEach(player => {
-        player.wasInReach = true; // 🎯 初回リーチフラグを設定
+        player.wasInReach = true;
     });
 
-    reachQueue = newReachPlayers;
-    
+    // 🎯 ここで「ビンゴしていないプレイヤーのみ」リストを作成
+    let nonBingoPlayers = newReachPlayers.filter(player => player.bingoCells.length === 0);
+
+    if (nonBingoPlayers.length > 0) {
+        setTimeout(() => {
+            let reachSound = document.getElementById('reach-sound');
+            reachSound.currentTime = 0;
+            reachSound.play();
+        }, 1000);
+    }
+
+    // 🎯 `reachQueue` に「新しいリーチ者リスト」を追加
+    reachQueue = nonBingoPlayers;
+
     if (reachQueue.length > 0 && !isShowingReach) {
-        showNextReach(); // 🎯 キューにリーチ者がいる場合のみ開始
+        showNextReach();
     }
 }
 
@@ -658,7 +698,23 @@ function drawNumber() {
     } while (drawnNumbers.includes(currentNumber));
 
     drawnNumbers.push(currentNumber);
-    document.getElementById('current-number').textContent = currentNumber;
+
+
+let currentNumberElement = document.getElementById('current-number');
+let rouletteSound = document.getElementById('roulette-sound');
+
+// ルーレット音声を再生
+rouletteSound.play();
+currentNumberElement.classList.add('roulette-animation');
+
+setTimeout(() => {
+  currentNumberElement.textContent = currentNumber;
+  currentNumberElement.classList.remove('roulette-animation');
+
+  // 音声を停止
+  rouletteSound.pause();
+  rouletteSound.currentTime = 0;
+}, 1000);
 
     updateCards(currentNumber);
     updateHistoryList();
@@ -963,8 +1019,8 @@ function showBingoPopup(player) {
             autoDrawPaused = true;
         }
 
-        // 🎯 10秒後にポップアップを閉じる
-        setTimeout(closeBingoPopup, 10000);
+        // 🎯 5秒後にポップアップを閉じる
+        setTimeout(closeBingoPopup, 5000);
     }, 1000); // 🔴 1秒の遅延
 }
 
@@ -1005,6 +1061,55 @@ function closeGameOverPopup() {
         popup.style.display = "none";
         document.body.removeChild(popup);
     }
+}
+
+function loadPlayersFromFile() {
+    let fileInput = document.getElementById('player-file');
+    let file = fileInput.files[0];
+
+    if (!file) {
+        alert("プレイヤー名が記載されたテキストファイルを選択してください！");
+        return;
+    }
+
+    let reader = new FileReader();
+    reader.onload = function(event) {
+        let text = event.target.result;
+        let playerList = text.split("\n").map(name => name.trim()).filter(name => name !== "");
+
+        if (playerList.length === 0) {
+            alert("テキストファイルにプレイヤー名が見つかりません！");
+            return;
+        }
+
+        shuffle(playerList); // 🎯 プレイヤー名をランダムにシャッフル
+
+        // 🎯 参加人数の入力エリアに読み込んだ人数をセット
+        document.getElementById('player-count').value = playerList.length;
+
+        players = []; // 🎯 既存のプレイヤーデータをクリア
+        for (let i = 0; i < playerList.length; i++) {
+            let newPlayer = {
+                name: playerList[i],
+                card: generateBingoCard(),
+                hits: Array(5).fill(null).map(() => Array(5).fill(false)),
+                bingoCells: [],
+                reachCells: [],
+                wasInReach: false
+            };
+
+            // 🎯 FREE（中央セル）を最初から開ける
+            if (newPlayer.card[2][2] === 'FREE') {
+                newPlayer.hits[2][2] = true;
+            }
+
+            players.push(newPlayer);
+        }
+
+        renderCards(); // 🎯 ビンゴカードを更新
+    };
+
+    reader.readAsText(file);
 }
 
     initializeGame();
