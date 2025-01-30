@@ -1,0 +1,165 @@
+1. 開発環境を整える
+まず、サンプルコードを動かすための準備をします。
+
+(1) Node.jsをインストール
+Node.jsを使ってサーバーコードを実行します。
+
+Node.jsの公式サイト（https://nodejs.org/）にアクセスし、最新版（LTS推奨）をダウンロードしてインストール。
+インストール後、ターミナル（またはコマンドプロンプト）を開き、以下のコマンドを入力してインストール確認：
+bash
+コードをコピーする
+node -v
+npm -v
+Node.jsとnpm（Node.js用のパッケージマネージャー）のバージョンが表示されれば成功です。
+2. サンプルコードを準備
+(1) サーバーコードを保存
+先ほどのサーバーコードをファイルとして保存します。
+
+任意のフォルダを作成します（例: online-bingo）。
+サーバーコードを以下のようにコピーし、server.jsという名前で保存。
+サーバーコード例（再掲）
+javascript
+コードをコピーする
+const http = require('http');
+const WebSocket = require('ws');
+
+const server = http.createServer();
+const wss = new WebSocket.Server({ server });
+
+let players = [];
+let currentNumber = null;
+
+wss.on('connection', (ws) => {
+  players.push({ ws, card: generateBingoCard(), isBingo: false });
+
+  ws.send(JSON.stringify({ type: 'init', card: players[players.length - 1].card }));
+
+  if (currentNumber) {
+    ws.send(JSON.stringify({ type: 'number', number: currentNumber }));
+  }
+
+  ws.on('message', (message) => {
+    const data = JSON.parse(message);
+    if (data.type === 'draw') {
+      currentNumber = drawNumber();
+      broadcast({ type: 'number', number: currentNumber });
+      checkBingo();
+    }
+  });
+});
+
+function drawNumber() {
+  return Math.floor(Math.random() * 75) + 1;
+}
+
+function generateBingoCard() {
+  let card = [];
+  for (let i = 0; i < 5; i++) {
+    card.push(Array.from({ length: 5 }, () => Math.floor(Math.random() * 75) + 1));
+  }
+  return card;
+}
+
+function broadcast(data) {
+  players.forEach((player) => player.ws.send(JSON.stringify(data)));
+}
+
+function checkBingo() {
+  players.forEach((player) => {
+    player.isBingo = true;
+  });
+}
+
+server.listen(8080, () => {
+  console.log('Server started on http://localhost:8080');
+});
+3. 必要な依存パッケージをインストール
+Node.jsでは、外部パッケージを使用して機能を拡張します。このコードではwsというWebSocketのパッケージを使います。
+
+(1) 初期設定（npm init）
+ターミナル（またはコマンドプロンプト）を開き、作成したフォルダに移動：
+
+bash
+コードをコピーする
+cd path/to/online-bingo
+※ path/to/online-bingoはフォルダの場所です。
+
+以下のコマンドを実行して、プロジェクトの初期設定を行います：
+
+bash
+コードをコピーする
+npm init -y
+→ これでpackage.jsonというファイルが自動生成されます。
+
+(2) 必要なパッケージをインストール
+WebSocketパッケージ（ws）をインストール：
+bash
+コードをコピーする
+npm install ws
+→ これで、サーバーコードを動かす準備が整いました。
+4. サーバーを起動
+ターミナルでサーバーコードを保存したフォルダに移動して、以下を実行：
+bash
+コードをコピーする
+node server.js
+以下のようなメッセージが表示されれば、サーバーが正常に起動しています：
+arduino
+コードをコピーする
+Server started on http://localhost:8080
+5. 動作確認
+ブラウザで確認
+
+サーバーが起動している状態で、ブラウザを開き、http://localhost:8080 にアクセスします。
+今回のサンプルコードでは、WebSocketの通信を使うので、サーバーが正しく動いているかを確認するには、次のクライアントコードが必要です。
+クライアントコードを準備
+
+以下のHTMLコードをコピーし、index.htmlとして保存：
+html
+コードをコピーする
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Bingo</title>
+</head>
+<body>
+  <div id="bingo-cards"></div>
+  <button id="draw-number">Draw Number</button>
+  <script>
+    const ws = new WebSocket('ws://localhost:8080');
+    const bingoCards = document.getElementById('bingo-cards');
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'init') {
+        renderCard(data.card);
+      } else if (data.type === 'number') {
+        alert(`New number drawn: ${data.number}`);
+      }
+    };
+
+    function renderCard(card) {
+      bingoCards.innerHTML = '';
+      card.forEach(row => {
+        const rowDiv = document.createElement('div');
+        row.forEach(num => {
+          const cell = document.createElement('span');
+          cell.textContent = num;
+          cell.style.padding = '10px';
+          rowDiv.appendChild(cell);
+        });
+        bingoCards.appendChild(rowDiv);
+      });
+    }
+
+    document.getElementById('draw-number').addEventListener('click', () => {
+      ws.send(JSON.stringify({ type: 'draw' }));
+    });
+  </script>
+</body>
+</html>
+ブラウザで実行
+
+index.htmlをブラウザで開きます（ダブルクリックで開くか、ブラウザの「ファイルを開く」から選択）。
+「Draw Number」ボタンを押すと、番号がランダムに引かれ、画面に反映されるはずです。

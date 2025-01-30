@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customizable Online Bingo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      background-image: url('WEBbackground.webp'); /* 背景画像を設定 */
+      background-size: cover; /* 画面全体に画像を覆う */
+      background-position: center; /* 画像を中央に配置 */
+      background-attachment: fixed; /* スクロール時に背景が動かないように固定 */
+    }
+    .header {
+      background-color: #3F51B5;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: clamp(1.5rem, 2vw, 2.5rem);
+      font-weight: bold;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background-color: #f1f1f1;
+    }
+    .controls input {
+      padding: 10px;
+      font-size: clamp(1rem,1.2vw 1.5rem);
+      width: 15vw;
+      text-align: center;
+      border-radius: 10px;
+      border: 2px solid #3F51B5;
+      background-color: white;
+    }
+    .controls button {
+      padding: 10px 20px;
+      font-size: clamp(1rem,1.2vw 1.5rem);
+      border: none;
+      cursor: pointer;
+      background-color: #3F51B5;
+      color: white;
+      border-radius: 25px;
+      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    .controls button:hover {
+      background-color: #45a049;
+    }
+    .container {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: calc(100vh - 80px);
+      overflow: hidden;
+    }
+    .grid-container {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 10px;
+      overflow-y: auto;
+      max-height: calc(100vh - 100px);
+    }
+    .grid {
+      display: grid;
+      gap: 10px;
+      width: 100%;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+.card {
+  background: rgba(255, 255, 255, 0.9); /* 半透明の背景 */
+  text-align: center;
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.3), -5px -5px 20px rgba(0, 0, 0, 0.3); /* 立体感を強化 */
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 10px;
+}
+    .card .player-name {
+      background-color: #f4f4f4;
+      font-size: 1.0vw;
+      padding: 5px;
+      margin-bottom: 5px;
+    }
+    .player-name input {
+      background-color: gray;
+color: white; /* 文字を白に設定 */
+text-shadow: 3px 3px 8px black, -3px -3px 8px black, 3px -3px 8px black, -3px 3px 8px black; /* 強く濃い黒縁取り */
+      text-align: center;
+      width: 90%;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 2px;
+      font-size: 1.4vw;
+    }
+
+
+    .bingo-grid {
+      display: grid;
+      gap: 3px;
+      grid-template-columns: repeat(5, 1fr);
+    }
+    .bingo-grid div {
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(1rem,1.5rem);
+      font-weight: bold;
+      font-family: 'Poppins', sans-serif;
+    }
+    .highlight {
+      background-color: yellow;
+    }
+    .bingo {
+      background-color: #1E88E5;
+      color: white;
+    }
+.reach {
+  background-color: #E53935;
+  color: white;
+  animation: blink 1s infinite;
+  z-index: 10000; /* 🎯 ポップアップより後ろにする */
+}
+
+/* ポップアップ表示中はリーチの点滅を止める */
+body.popup-open .reach {
+  animation: none !important;
+}
+
+    .reach-stopped {
+      background-color: red;
+      color: white;
+    }
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    .list-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 10px;
+      flex: 1;
+      padding: 10px;
+      max-height: calc(100vh - 100px);
+    }
+.bingo-list {
+  background-color: rgba(255, 255, 255, 0.5); /* 半透明の背景 */
+  color: white; /* 文字を白に設定 */
+  font-weight: bold; /* 文字を太くする */
+  text-shadow: 3px 3px 8px black, -3px -3px 8px black, 3px -3px 8px black, -3px 3px 8px black; /* 強く濃い黒縁取り */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 0px 10px 10px 10px;
+  flex: 1;
+  height: 100%;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+font-weight: bold; /* 文字を太字にする */
+
+}
+
+    .bingo-list ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .history-list h3,
+    .bingo-list h3 {
+      font-size: 1.6vw;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .history-list {
+  background-color: rgba(255, 255, 255, 0.5); /* 半透明の背景 */
+  color: white; /* 文字を白に設定 */
+  text-shadow: 2px 2px 5px black, -2px -2px 5px black, 2px -2px 5px black, -2px 2px 5px black; /* 強い黒縁取り */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 0px 10px 10px 10px;
+  flex: 1;
+  height: 100%;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+font-weight: bold; /* 文字を太字にする */
+    }
+
+    .history-list ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+      grid-auto-rows: 1.5em;
+      gap: 5px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+.history-list li {
+  text-align: center;
+  padding: 5px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3), -4px -4px 12px rgba(0, 0, 0, 0.3); /* より強い立体感 */
+}
+
+/* ポップアップ全体のスタイル */
+.popup-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* 半透明の背景 */
+  justify-content: center;
+  align-items: center;
+  z-index: 20000;
+}
+
+/* ポップアップの内容 */
+.popup-content {
+  background: white;
+  width: 50vw;  /* 🎯 幅を適切に設定 */
+  max-width: 600px; /* 🎯 最大幅を設定 */
+  height: auto; /* 🎯 高さをコンテンツに応じて調整 */
+  padding: 30px; /* 🎯 余白を確保 */
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  z-index: 20001;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* 🎯 はみ出しを防ぐ */
+}
+
+/* プレイヤー名を大きく */
+#popup-player-name {
+  font-size: 4rem; /* 🎯 文字サイズを大きく */
+  font-weight: bold;
+  background-color: red; /* 🎯 背景色を赤に */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  display: inline-block;
+  text-shadow: 2px 2px 5px black, -2px -2px 5px black, 2px -2px 5px black, -2px 2px 5px black; /* 🎯 強い黒い縁取り */
+}
+
+
+/* 画像のサイズを大きく */
+.popup-content img {
+  width: 250px; /* 🎯 画像サイズを拡大 */
+  height: 250px;
+  border-radius: 50%;
+  margin: 20px 0;
+}
+
+/* ビンゴに必要な番号を大きく表示 */
+#popup-reach-numbers {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* 閉じるボタンを大きく */
+.popup-content button {
+  background-color: #3F51B5;
+  color: white;
+  padding: 15px 25px; /* 🎯 ボタンサイズを大きく */
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.popup-content button:hover {
+  background-color: #303F9F;
+}
+
+.popup-content h3 {
+  font-size: 2.5rem;  /* 🎯 文字サイズを大きく */
+  font-weight: bold;
+  color: #E53935;  /* 🎯 文字色を赤く（必要に応じて変更） */
+  margin-bottom: 20px; /* 🎯 余白を追加 */
+}
+
+/* ビンゴポップアップ全体のスタイル */
+#bingo-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* 🎯 透明度を調整 (0.7 → 0.5) */
+  backdrop-filter: blur(10px); /* 🎯 背景をぼかす（黒くなりすぎるのを防ぐ） */
+  justify-content: center;
+  align-items: center;
+  z-index: 20000;
+}
+
+/* ビンゴポップアップの内容 */
+#bingo-popup .popup-content {
+  background: white;
+  width: 50vw;
+  max-width: 600px;
+  height: auto;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  z-index: 20001;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+
+/* ビンゴポップアップのプレイヤー名 */
+#bingo-player-name {
+  font-size: 4rem;
+  font-weight: bold;
+  background-color: blue; /* 🎯 ビンゴの背景色を青にする */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  display: inline-block;
+  text-shadow: 2px 2px 5px black, -2px -2px 5px black, 2px -2px 5px black, -2px 2px 5px black;
+}
+
+/* ビンゴポップアップの画像 */
+#bingo-player-image {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  margin: 20px 0;
+}
+
+/* ビンゴポップアップのメッセージ */
+#bingo-message {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* ビンゴポップアップの閉じるボタン */
+#bingo-popup button {
+  background-color: #3F51B5;
+  color: white;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  max-width: 90%;
+  margin-top: 20px;
+  align-self: center;
+}
+
+#bingo-popup button:hover {
+  background-color: #303F9F;
+}
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    現在の番号: <span id="current-number">None</span>
+  </div>
+  <div class="controls">
+    <input type="number" id="player-count" min="1" max="100" value="20" />
+    <button onclick="initializeGame()">プレイヤー数セット</button>
+    <button onclick="drawNumber()">ビンゴ開始！</button>
+    <button onclick="toggleAutoDraw()">全自動ビンゴ開始／停止</button>
+  </div>
+<div id="modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+     background: rgba(0,0,0,0.8); color: white; padding: 20px; border-radius: 10px; text-align: center; font-size: 1.5rem;">
+    <span id="modal-message"></span>
+</div>
+  <div class="container">
+    <div class="grid-container">
+      <div class="grid" id="bingo-cards"></div>
+    </div>
+    <div class="list-container">
+      <div class="history-list" id="history-list">
+        <h3>当たり番号</h3>
+        <ul id="number-history"></ul>
+      </div>
+      <div class="bingo-list" id="bingo-list">
+        <h3>ビンゴ当選者</h3>
+        <ul id="winner-list"></ul>
+      </div>
+    </div>
+  </div>
+
+<div id="reach-popup" class="popup-container">
+  <div class="popup-content">
+    <h2 id="popup-player-name"></h2>
+    <img id="popup-player-image" src="" alt="Player Image">
+    <h3>あなたはリーチになりました♪</h3>
+    <p id="popup-reach-numbers"></p>
+    <button onclick="closePopup()">閉じる</button>
+  </div>
+</div>
+
+<!-- ビンゴポップアップ -->
+<div id="bingo-popup" class="popup-container">
+  <div class="popup-content">
+    <h2 id="bingo-player-name"></h2>
+    <img id="bingo-player-image" src="" alt="Player Image">
+    <h3>🎉 ビンゴおめでとう！ 🎉</h3>
+    <p id="bingo-message">あなたはビンゴになりました！</p>
+    <button onclick="closeBingoPopup()">閉じる</button>
+  </div>
+</div>
+
+  <audio id="reach-sound" src="reach.mp3"></audio>
+  <audio id="bingo-sound" src="bingo.mp3"></audio>
+  <audio id="roulette-sound" src="roulette.mp3" loop></audio>
+
+  <script>
+let popupTimeout = null; // ポップアップ表示中のタイマーを管理する変数
+let isPopupVisible = false; // ポップアップが表示中かどうかを管理するフラグ
+let reachQueue = []; // リーチ者をキューに保存
+let isShowingReach = false; // モーダル表示中かどうかを管理
+let autoDrawPaused = false; // 🎯 自動ビンゴが停止中かどうかを管理
+let bingoQueue = []; // 🎯 ビンゴになったプレイヤーを保存するキュー
+let isBingoPopupVisible = false; // 🎯 ビンゴポップアップが表示中かどうか
+let turnCount = 1; // 🎯 1からスタート（0ではなく）
+    let players = [];
+    const drawnNumbers = [];
+    const winners = [];
+    let autoDrawInterval = null;
+
+    function generateBingoCard() {
+      const numbers = [];
+      for (let i = 0; i < 5; i++) {
+        const col = Array.from({ length: 15 }, (_, j) => i * 15 + j + 1);
+        numbers.push(shuffle(col).slice(0, 5));
+      }
+      numbers[2][2] = 'FREE';
+      return numbers;
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+function initializeGame() {
+    const playerCount = parseInt(document.getElementById('player-count').value, 10);
+    players = Array.from({ length: playerCount }, (_, i) => ({
+        name: `Player ${i + 1}`,
+        card: generateBingoCard(),
+        hits: Array(5).fill(null).map(() => Array(5).fill(false)),
+        bingoCells: [],
+        reachCells: [],
+        wasInReach: false // 🎯 リーチフラグをリセット
+    }));
+
+    players.forEach(player => {
+        player.hits[2][2] = true;
+    });
+
+    renderCards();
+    updateWinnerList();
+    updateHistoryList();
+}
+
+function showReachPopup(player) {
+    document.getElementById('popup-player-name').textContent = player.name;
+
+    // 画像のパスをプレイヤー名に基づいて設定（例: images/Player1.jpg）
+    let imagePath = `images/${player.name.replace(/\s+/g, '')}.jpg`;
+    document.getElementById('popup-player-image').src = imagePath;
+    document.getElementById('popup-player-image').alt = `${player.name} の写真`;
+
+    // ビンゴに必要な番号を取得
+    let nextWinningNumbers = getNextWinningNumbers(player);
+    document.getElementById('popup-reach-numbers').textContent = 
+        "次に出て欲しい番号は！: " + (nextWinningNumbers.length > 0 ? nextWinningNumbers.join(", ") : "なし");
+
+    let popup = document.getElementById('reach-popup');
+    popup.style.display = "flex";
+    popup.style.zIndex = "20000"; // 🎯 ポップアップを最前面に
+    document.body.classList.add("popup-open"); // 🎯 リーチの点滅を止める
+}
+
+function renderCards() {
+    const gridContainer = document.getElementById('bingo-cards');
+    gridContainer.innerHTML = '';
+
+    players.forEach((player, index) => {
+        let nameBackground = "gray"; // デフォルトの色
+
+        if (player.bingoCells.length > 0) {
+            nameBackground = "#1E88E5"; // 🎯 ビンゴしたら青
+        } else if (player.reachCells.length > 0) {
+            nameBackground = "red"; // 🎯 リーチしたら赤
+        }
+
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card';
+        cardDiv.innerHTML = `
+          <div class="player-name">
+            <input type="text" value="${player.name}" maxlength="7" 
+                   oninput="updatePlayerName(${index}, this.value)" 
+                   style="background-color: ${nameBackground}; color: white; text-align: center;" />
+          </div>
+          <div class="bingo-grid">
+            ${player.card.map((row, i) =>
+                row.map((num, j) => {
+                    let className = '';
+
+                    if (player.hits[i][j]) { 
+                        className = 'highlight'; // 🎯 当たった番号は黄色
+                    }
+                    if (player.bingoCells.some(cell => cell[0] === i && cell[1] === j)) {
+                        className = 'bingo'; // 🎯 ビンゴ番号は青
+                    } else if (player.reachCells.some(cell => cell[0] === i && cell[1] === j) && player.bingoCells.length === 0) {
+                        className = 'reach'; // 🎯 ビンゴしていない場合のみリーチの赤点滅
+                    }
+                    return `<div class="${className}">${num === 'FREE' ? 'F' : num}</div>`;
+                }).join('')
+            ).join('')}
+          </div>
+        `;
+        gridContainer.appendChild(cardDiv);
+    });
+}
+
+
+    function updatePlayerName(index, name) {
+      players[index].name = name.slice(0, 7);
+    }
+
+    function saveWinnersToServer() {
+      const top3Players = winners.slice(0, 3).map(player => player.name);
+      
+      fetch('/save_winners', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ winners: top3Players })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Winners saved successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error saving winners:', error);
+      });
+    }
+
+
+function notifyReaches(reachPlayers) {
+    let newReachPlayers = reachPlayers.filter(player => !player.wasInReach); // 🎯 まだリーチしていないプレイヤーのみ取得
+
+    console.log("リーチ判定:", newReachPlayers);
+
+    if (newReachPlayers.length === 0) return; // すでにリーチのプレイヤーしかいない場合は何もしない
+
+    newReachPlayers.forEach(player => {
+        player.wasInReach = true; // 🎯 初回リーチフラグを設定
+    });
+
+    reachQueue = newReachPlayers;
+    
+    if (reachQueue.length > 0 && !isShowingReach) {
+        showNextReach(); // 🎯 キューにリーチ者がいる場合のみ開始
+    }
+}
+
+
+function showNextReach() {
+    if (reachQueue.length === 0) {
+        isShowingReach = false;
+        return;
+    }
+
+    isShowingReach = true;
+    let player = reachQueue.shift();
+
+    console.log("ポップアップ表示:", player.name);
+    showReachPopup(player);
+
+    setTimeout(() => {
+        document.getElementById('reach-popup').style.display = 'none';
+        document.body.classList.remove("popup-open"); // 🎯 スクロールを解除
+        isShowingReach = false;
+        showNextReach(); // 🎯 次のリーチ者を表示
+    }, 5000); // 🎯 5秒後に次のプレイヤーのポップアップを表示
+}
+
+function showNextBingoPopup() {
+    if (bingoQueue.length === 0) {
+        isBingoPopupVisible = false;
+
+        // 🎯 最後のポップアップが閉じたら自動ビンゴを再開
+        if (autoDrawPaused) {
+            autoDrawInterval = setInterval(drawNumber, 5000);
+            autoDrawPaused = false;
+        }
+        return;
+    }
+
+    isBingoPopupVisible = true;
+    let player = bingoQueue.shift(); // 🎯 キューから1人取り出す
+    showBingoPopup(player);
+}
+
+function drawNumber() {
+    // 🎯 すでにゲームが終了していたら何もしない
+    if (players.every(player => player.bingoCells.length > 0)) {
+        console.log("⚠️ すでに全員ビンゴ済み、番号抽選を中止");
+        return;
+    }
+
+    if (drawnNumbers.length >= 75) {
+        alert('All numbers have been drawn!');
+        return;
+    }
+
+    let currentNumber;
+    do {
+        currentNumber = Math.floor(Math.random() * 75) + 1;
+    } while (drawnNumbers.includes(currentNumber));
+
+    drawnNumbers.push(currentNumber);
+    document.getElementById('current-number').textContent = currentNumber;
+
+    updateCards(currentNumber);
+    updateHistoryList();
+
+    turnCount++;
+
+    const reachPlayers = [];
+    players.forEach(player => {
+        if (checkReach(player, currentNumber)) {
+            reachPlayers.push(player);
+        }
+    });
+
+    if (reachPlayers.length > 0) {
+        notifyReaches(reachPlayers);
+    }
+}
+
+function checkGameEnd() {
+    if (players.every(player => player.bingoCells.length > 0)) {
+        if (autoDrawInterval) {
+            clearInterval(autoDrawInterval);
+            autoDrawInterval = null;
+            console.log("🚨 全員ビンゴ！全自動ビンゴを停止しました！");
+        }
+
+        autoDrawPaused = true;
+        console.log("⚠️ 自動ビンゴは完全に停止されました！");
+
+        // 🎯 メッセージを **1回だけ** 表示する
+        setTimeout(() => {
+            alert('Game Over! 全員がビンゴしました！');
+        }, 100); // 💡 タイムアウトを少し入れるとより確実
+    }
+}
+
+function toggleAutoDraw() {
+    if (autoDrawInterval) {
+        clearInterval(autoDrawInterval);
+        autoDrawInterval = null;
+        console.log("⏸️ 自動ビンゴを手動で停止");
+    } else {
+        // 🎯 全員ビンゴしている場合は開始しない
+        if (players.every(player => player.bingoCells.length > 0)) {
+            console.log("⚠️ 全員ビンゴ済み！自動ビンゴは開始しません");
+            return;
+        }
+
+        autoDrawInterval = setInterval(() => {
+            if (!isShowingReach && !players.every(player => player.bingoCells.length > 0)) {
+                drawNumber();
+            } else {
+                console.log("⏹️ 全自動ビンゴ停止（すでに全員ビンゴ）");
+                clearInterval(autoDrawInterval);
+                autoDrawInterval = null;
+            }
+        }, 5000);
+
+        console.log("▶️ 自動ビンゴ開始");
+    }
+}
+
+function updateCards(number) {
+    players.forEach(player => {
+        if (player.bingoCells.length > 0) return; // 既にビンゴのプレイヤーはスキップ
+
+        player.card.forEach((row, i) => {
+            row.forEach((num, j) => {
+                if (num === number) {
+                    player.hits[i][j] = true; // 当たった番号をマーク
+                }
+            });
+        });
+
+        checkReach(player, number); // リーチを確認
+        checkBingo(player); // ビンゴを確認
+    });
+
+    renderCards(); // 🎯 ここでカードの表示を更新
+}
+
+function checkReach(player, currentNumber) {
+    const card = player.card;
+    const hits = player.hits;
+    let isReach = false;
+    player.reachCells = []; // 🎯 リーチセルを初期化
+
+    // カード上の番号が抽選された番号なら hits を更新
+    for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+            if (card[i][j] === currentNumber) {
+                hits[i][j] = true;
+            }
+        }
+    }
+
+    // 横のリーチチェック
+    for (let i = 0; i < 5; i++) {
+        const rowHits = hits[i].filter(Boolean).length;
+        if (rowHits === 4) { // 4つ当たっていたらリーチ
+            isReach = true;
+            for (let j = 0; j < 5; j++) {
+                if (!hits[i][j]) {
+                    player.reachCells.push([i, j]); // 残りの1つをリーチセルとして保存
+                }
+            }
+        }
+    }
+
+    // 縦のリーチチェック
+    for (let i = 0; i < 5; i++) {
+        const colHits = hits.map(row => row[i]).filter(Boolean).length;
+        if (colHits === 4) {
+            isReach = true;
+            for (let j = 0; j < 5; j++) {
+                if (!hits[j][i]) {
+                    player.reachCells.push([j, i]);
+                }
+            }
+        }
+    }
+
+    // 斜め（左上→右下）のリーチチェック
+    const diagHits1 = [0, 1, 2, 3, 4].map(i => hits[i][i]).filter(Boolean).length;
+    if (diagHits1 === 4) {
+        isReach = true;
+        for (let i = 0; i < 5; i++) {
+            if (!hits[i][i]) {
+                player.reachCells.push([i, i]);
+            }
+        }
+    }
+
+    // 斜め（右上→左下）のリーチチェック
+    const diagHits2 = [0, 1, 2, 3, 4].map(i => hits[i][4 - i]).filter(Boolean).length;
+    if (diagHits2 === 4) {
+        isReach = true;
+        for (let i = 0; i < 5; i++) {
+            if (!hits[i][4 - i]) {
+                player.reachCells.push([i, 4 - i]);
+            }
+        }
+    }
+
+    return isReach;
+}
+
+function showReachPopup(player) {
+    document.getElementById('popup-player-name').textContent = player.name;
+
+    // 画像のパスをプレイヤー名に基づいて設定（例: images/Player1.jpg）
+    let imagePath = `images/${player.name.replace(/\s+/g, '')}.jpg`;
+    document.getElementById('popup-player-image').src = imagePath;
+    document.getElementById('popup-player-image').alt = `${player.name} の写真`;
+
+    // 🎯 ここで `getNextWinningNumbers()` を実行
+    let nextWinningNumbers = getNextWinningNumbers(player);
+    document.getElementById('popup-reach-numbers').textContent = 
+        "次に出て欲しい番号は！: " + (nextWinningNumbers.length > 0 ? nextWinningNumbers.join(", ") : "なし");
+
+    let popup = document.getElementById('reach-popup');
+    popup.style.display = "flex";
+    popup.style.zIndex = "20000"; // 🎯 最前面に表示
+    document.body.classList.add("popup-open"); // 🎯 リーチの点滅を止める
+
+    console.log("ポップアップが開かれました:", player.name);
+}
+
+function closePopup() {
+  document.getElementById('reach-popup').style.display = "none";
+}
+
+function checkBingo(player) {
+    const { hits } = player;
+    let bingoCells = [];
+
+    // 横のビンゴチェック
+    for (let i = 0; i < 5; i++) {
+        if (hits[i].every(Boolean)) {
+            bingoCells.push(...hits[i].map((_, j) => [i, j]));
+        }
+    }
+
+    // 縦のビンゴチェック
+    for (let i = 0; i < 5; i++) {
+        if (hits.every(row => row[i])) {
+            bingoCells.push(...hits.map((_, j) => [j, i]));
+        }
+    }
+
+    // 斜め（左上→右下）のビンゴチェック
+    if ([0, 1, 2, 3, 4].map(i => hits[i][i]).every(Boolean)) {
+        bingoCells.push(...[0, 1, 2, 3, 4].map(i => [i, i]));
+    }
+
+    // 斜め（右上→左下）のビンゴチェック
+    if ([0, 1, 2, 3, 4].map(i => hits[i][4 - i]).every(Boolean)) {
+        bingoCells.push(...[0, 1, 2, 3, 4].map(i => [i, 4 - i]));
+    }
+
+    if (bingoCells.length > 0) {
+        player.bingoCells = bingoCells;
+        player.reachCells = [];
+
+        if (!winners.some(w => w.name === player.name)) {
+            player.bingoTurn = turnCount;
+            winners.push(player);
+            document.getElementById('bingo-sound').play();
+            updateWinnerList();
+
+            bingoQueue.push(player);
+            if (!isBingoPopupVisible) {
+                showNextBingoPopup();
+            }
+        }
+
+        // 🎯 最後のビンゴが出た場合は `checkGameEnd()` を呼ぶ
+        if (players.every(p => p.bingoCells.length > 0)) {
+            checkGameEnd();
+        }
+    }
+}
+
+function updateWinnerList() {
+    const list = document.getElementById('winner-list');
+    list.innerHTML = '';
+
+    let currentRank = 1; // 🎯 最初の順位は 1
+    let lastBingoTurn = -1; // 🎯 前のビンゴターン
+    let sameTurnCount = 0; // 🎯 同じターン内でのビンゴ人数カウント
+
+    // 🎯 ターン順で並べ直す（万が一順番が崩れた場合に対応）
+    winners.sort((a, b) => a.bingoTurn - b.bingoTurn);
+
+    winners.forEach((player, index) => {
+        if (player.bingoTurn !== lastBingoTurn) {
+            // 🎯 新しいターンのビンゴなら順位を更新
+            if (index !== 0) {
+                currentRank += sameTurnCount; // 🎯 次の順位を「前の順位 + 同時ビンゴ人数」に変更
+            }
+            sameTurnCount = 1; // 🎯 新しいターンの最初のプレイヤー
+        } else {
+            sameTurnCount++; // 🎯 同じターンのプレイヤーをカウント
+        }
+        
+        const listItem = document.createElement('li');
+        listItem.textContent = `${currentRank}. ${player.name}`;
+        list.appendChild(listItem);
+
+        lastBingoTurn = player.bingoTurn;
+    });
+}
+
+
+function updateHistoryList() {
+    const list = document.getElementById('number-history');
+    list.innerHTML = ''; // 🎯 履歴をリセットして再描画
+
+    drawnNumbers.forEach(number => {
+        const listItem = document.createElement('li');
+        listItem.textContent = number;
+        list.appendChild(listItem);
+    });
+}
+
+function getNextWinningNumbers(player) {
+    let winningNumbers = [];
+
+    player.reachCells.forEach(([i, j]) => {
+        let number = player.card[i][j];
+        if (!player.hits[i][j] && number !== "FREE") {
+            winningNumbers.push(number);
+        }
+    });
+
+    return winningNumbers;
+}
+
+function stopAutoDraw() {
+  if (autoDrawInterval) {
+    clearInterval(autoDrawInterval);
+    autoDrawInterval = null;
+  }
+  isPaused = true; // 🔹 停止フラグを確実に設定
+}
+
+function restartAutoDraw() {
+  if (isPaused) {
+    isPaused = false; // 🔹 停止フラグ解除
+    autoDrawInterval = setInterval(drawNumber, 5000);
+  }
+}
+
+function closePopup() {
+    let popup = document.getElementById('reach-popup');
+    popup.style.display = "none";
+    document.body.classList.remove("popup-open"); // 🎯 リーチの点滅を再開
+
+    isPopupVisible = false; // ポップアップ表示中フラグを解除
+
+    // 次のリーチ者を表示
+    showNextReach();
+}
+
+
+function showBingoPopup(player) {
+    document.getElementById('bingo-player-name').textContent = player.name;
+
+    // 画像のパスをプレイヤー名に基づいて設定
+    let imagePath = `images/${player.name.replace(/\s+/g, '')}.jpg`;
+    document.getElementById('bingo-player-image').src = imagePath;
+    document.getElementById('bingo-player-image').alt = `${player.name} の写真`;
+
+    // 🎉 ビンゴおめでとうメッセージ
+    document.getElementById('bingo-message').textContent = 
+        `${player.name} さんがビンゴになりました！`;
+
+    let popup = document.getElementById('bingo-popup');
+    popup.style.display = "flex";
+    popup.style.zIndex = "20000";
+    document.body.classList.add("popup-open");
+
+    // 🎯 自動ビンゴを一時停止
+    if (autoDrawInterval) {
+        clearInterval(autoDrawInterval);
+        autoDrawInterval = null;
+        autoDrawPaused = true;
+    }
+
+    // 🎯 10秒後に自動でポップアップを閉じる
+    setTimeout(closeBingoPopup, 10000);
+}
+
+/* ビンゴポップアップを閉じる関数 */
+function closeBingoPopup() {
+    let popup = document.getElementById('bingo-popup');
+    popup.style.display = "none";
+    document.body.classList.remove("popup-open");
+
+    // 🎯 次のプレイヤーのポップアップを表示
+    showNextBingoPopup();
+}
+
+    initializeGame();
+  </script>
+</body>
+</html>
