@@ -342,7 +342,7 @@ font-weight: bold; /* 文字を太字にする */
 #bingo-popup .popup-content {
   background: white;
   width: 35vw; /* 🎯 幅を適切に縮小 */
-  max-width: 320px; /* 🎯 最大幅を 450px に */
+  max-width: 400px; /* 🎯 最大幅を 450px に */
   height: auto;
   padding: 10px;
   border-radius: 15px;
@@ -667,8 +667,8 @@ function showNextReach() {
 
             // 🎯 次のリーチ者を表示
             showNextReach();
-        }, 5000); // 🎯 5秒後に閉じる
-    }, 1000); // 🎯 1秒遅延
+        }, 4000); // 🎯 5秒後に閉じる
+    }, 100); // 🎯 1秒遅延
 }
 
 function showNextBingoPopup() {
@@ -697,8 +697,8 @@ function showNextBingoPopup() {
             if (reachQueue.length > 0) {
                 showNextReach();
             }
-        }, 5000); // 🎯 5秒後に閉じる
-    }, 1000); // 🎯 1秒遅延
+        }, 4000); // 🎯 5秒後に閉じる
+    }, 100); // 🎯 1秒遅延
 }
 
 function showNextBingoPopup() {
@@ -707,7 +707,7 @@ function showNextBingoPopup() {
 
         // 🎯 最後のポップアップが閉じたら自動ビンゴを再開
         if (autoDrawPaused) {
-            autoDrawInterval = setInterval(drawNumber, 5000);
+            autoDrawInterval = setInterval(drawNumber, 3000);
             autoDrawPaused = false;
         }
         return;
@@ -800,7 +800,7 @@ function toggleAutoDraw() {
             if (!isBingoPopupVisible) { // **🔴 isShowingReach を削除**
                 drawNumber();
             }
-        }, 5000);
+        }, 3000);
     }
 }
 
@@ -921,7 +921,7 @@ function showReachPopup(player) {
             }
         }, 100);
 
-    }, 1000); // 🎯 1秒遅延してポップアップ表示
+    }, 100); // 🎯 1秒遅延してポップアップ表示
 }
 
 function closePopup() {
@@ -1048,7 +1048,7 @@ function restartAutoDraw() {
             if (!isBingoPopupVisible && !isShowingReach) { // 🎯 他のポップアップが出ていない時のみ進行
                 drawNumber();
             }
-        }, 5000);
+        }, 3000);
     }
 }
 
@@ -1087,8 +1087,8 @@ function showBingoPopup(player) {
             bingoSound.play();
         }, 100);
 
-        setTimeout(closeBingoPopup, 5000); // 5秒後に閉じる
-    }, 1000); // 🎯 0.5秒の遅延
+        setTimeout(closeBingoPopup, 3000); // 5秒後に閉じる
+    }, 100); // 🎯 0.5秒の遅延
 }
 
 
@@ -1120,7 +1120,7 @@ function showGameOverPopup(lastBingoPlayer) {
         `;
 
         document.body.appendChild(popup);
-    }, 2000); // 🔴 2秒の遅延
+    }, 1000); // 🔴 2秒の遅延
 }
 
 function closeGameOverPopup() {
