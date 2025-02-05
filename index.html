@@ -741,7 +741,13 @@ function drawNumber() {
     let rouletteSound = document.getElementById('roulette-sound');
 
     // 🎯 ルーレット音を再生
-    rouletteSound.play();
+
+            if (rouletteSound.paused) { // 🎯 すでに再生中でないことを確認
+                rouletteSound.currentTime = 0; // 音をリセット
+                rouletteSound.play();
+            }
+
+    
     currentNumberElement.classList.add('roulette-animation');
 
     // 🎯 ルーレットアニメーションの後に番号を表示（1秒遅延）
